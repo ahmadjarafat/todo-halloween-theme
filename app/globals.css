@@ -6,67 +6,67 @@
 /* Custom color variables */
 :root {
   /* Custom theme colors */
-  --primary: 356 88% 51%; /* #D90429 */
-  --primary-400: 355 78% 59%; /* #E13654 */
-  --primary-foreground: 0 0% 98%; /* #FAFAFA */
-  --background: 0 0% 100%; /* #FFFFFF */
-  --foreground: 23 95% 4%; /* #1F0806 */
-  --muted-text: 0 0% 28%; /* #474747 */
-  --muted-foreground: 0 0% 45%; /* #71717A */
+  --primary: #d90429;
+  --primary-400: #e13654;
+  --primary-foreground: #fafafa;
+  --background: #ffffff;
+  --foreground: #1f0806;
+  --muted-text: #474747;
+  --muted-foreground: #71717a;
 
   /* Existing shadcn/ui variables */
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 13%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 13%;
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 20%;
-  --muted: 0 0% 96%;
-  --accent: 220 90% 56%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 93%;
-  --input: 0 0% 93%;
-  --ring: 0 0% 71%;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 89% 61%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
+  --card: #ffffff;
+  --card-foreground: #1f0806;
+  --popover: #ffffff;
+  --popover-foreground: #1f0806;
+  --secondary: #f6f6f6;
+  --secondary-foreground: #1f0806;
+  --muted: #f6f6f6;
+  --accent: #d90429;
+  --accent-foreground: #fafafa;
+  --destructive: #d90429;
+  --destructive-foreground: #fafafa;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #d90429;
+  --chart-1: #d90429;
+  --chart-2: #e13654;
+  --chart-3: #d90429;
+  --chart-4: #e13654;
+  --chart-5: #d90429;
   --radius: 0.5rem;
-  --red: 0 84% 60%;
-  --red-light: 0 84% 88%;
+  --red: #e11d48;
+  --red-light: #f8b4b4;
 }
 
 .dark {
   /* Dark theme overrides */
-  --background: 23 95% 4%; /* #1F0806 */
-  --foreground: 0 0% 100%; /* #FFFFFF */
-  --body-text: 0 0% 100%; /* #FFFFFF */
-  --muted-text: 0 0% 92%; /* #EBEBEB */
+  --background: #1f0806;
+  --foreground: #ffffff;
+  --body-text: #ffffff;
+  --muted-text: #ebebeb;
 
   /* Existing dark theme variables */
-  --card: 0 0% 13%;
-  --card-foreground: 0 0% 98%;
-  --popover: 0 0% 13%;
-  --popover-foreground: 0 0% 98%;
-  --secondary: 0 0% 27%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 27%;
-  --muted-foreground: 0 0% 71%;
-  --accent: 220 90% 56%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 62% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 27%;
-  --input: 0 0% 27%;
-  --ring: 0 0% 44%;
-  --chart-1: 280 85% 65%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 12 76% 61%;
-  --chart-4: 197 89% 61%;
-  --chart-5: 43 74% 66%;
+  --card: #1f0806;
+  --card-foreground: #ffffff;
+  --popover: #212121;
+  --popover-foreground: #ffffff;
+  --secondary: #454545;
+  --secondary-foreground: #ffffff;
+  --muted: #454545;
+  --muted-foreground: #71717a;
+  --accent: #d90429;
+  --accent-foreground: #fafafa;
+  --destructive: #dc2626;
+  --destructive-foreground: #fafafa;
+  --border: #454545;
+  --input: #454545;
+  --ring: #707070;
+  --chart-1: #d90429;
+  --chart-2: #e13654;
+  --chart-3: #d90429;
+  --chart-4: #e13654;
+  --chart-5: #d90429;
 }
 
 @theme inline {
@@ -81,6 +81,7 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-400: var(--primary-400);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
