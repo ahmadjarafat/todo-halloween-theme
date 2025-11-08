@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import localFont from 'next/font/local'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { Header } from '@/components/Header'
 import './globals.css'
 
 const jannaLT = localFont({
@@ -58,7 +60,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${jannaLT.variable} ${rubikWetPaint.variable} font-sans antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          <main>{children}</main>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

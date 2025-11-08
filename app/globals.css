@@ -3,20 +3,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Add custom TOPO theme colors and update color variables */
+/* Custom color variables */
 :root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 13%;
+  /* Custom theme colors */
+  --primary: 356 88% 51%; /* #D90429 */
+  --primary-400: 355 78% 59%; /* #E13654 */
+  --primary-foreground: 0 0% 98%; /* #FAFAFA */
+  --background: 0 0% 100%; /* #FFFFFF */
+  --foreground: 23 95% 4%; /* #1F0806 */
+  --muted-text: 0 0% 28%; /* #474747 */
+  --muted-foreground: 0 0% 45%; /* #71717A */
+
+  /* Existing shadcn/ui variables */
   --card: 0 0% 100%;
   --card-foreground: 0 0% 13%;
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 13%;
-  --primary: 0 0% 20%;
-  --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 96%;
   --secondary-foreground: 0 0% 20%;
   --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 56%;
   --accent: 220 90% 56%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
@@ -35,14 +40,17 @@
 }
 
 .dark {
-  --background: 0 0% 13%;
-  --foreground: 0 0% 98%;
+  /* Dark theme overrides */
+  --background: 23 95% 4%; /* #1F0806 */
+  --foreground: 0 0% 100%; /* #FFFFFF */
+  --body-text: 0 0% 100%; /* #FFFFFF */
+  --muted-text: 0 0% 92%; /* #EBEBEB */
+
+  /* Existing dark theme variables */
   --card: 0 0% 13%;
   --card-foreground: 0 0% 98%;
   --popover: 0 0% 13%;
   --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 20%;
   --secondary: 0 0% 27%;
   --secondary-foreground: 0 0% 98%;
   --muted: 0 0% 27%;
@@ -62,7 +70,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-janna), "JannaLT", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-janna), "JannaLT", system-ui, -apple-system,
+    sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --font-rubik: var(--font-rubik-wet-paint), "RubikWetPaint", cursive;
   --color-background: var(--background);
