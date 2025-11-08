@@ -1,10 +1,31 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import localFont from 'next/font/local'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const jannaLT = localFont({
+  src: [
+    {
+      path: './assets/fonts/JannaLT-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './assets/fonts/ArbFONTS-Janna-LT-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    }
+  ],
+  variable: '--font-janna',
+  display: 'swap',
+})
+
+const rubikWetPaint = localFont({
+  src: './assets/fonts/RubikWetPaint-Regular.ttf',
+  variable: '--font-rubik-wet-paint',
+  weight: '400',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'v0 App',
@@ -36,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <body className={`${jannaLT.variable} ${rubikWetPaint.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>
