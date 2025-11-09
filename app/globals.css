@@ -22,7 +22,7 @@
   --secondary: #f6f6f6;
   --secondary-foreground: #18181b;
   --muted: #f6f6f6;
-  --accent: #d90429;
+  --accent: #ff7f7f;
   --accent-foreground: #fafafa;
   --destructive: #d90429;
   --destructive-foreground: #fafafa;
@@ -55,7 +55,7 @@
   --secondary-foreground: #ffffff;
   --muted: #454545;
   --muted-foreground: #71717a;
-  --accent: #d90429;
+  --accent: #ff7f7f;
   --accent-foreground: #fafafa;
   --destructive: #dc2626;
   --destructive-foreground: #fafafa;

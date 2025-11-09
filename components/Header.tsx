@@ -28,7 +28,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-x-5">
-          <Button variant="ghost" className="!p-1 hover:bg-primary/10 mb-0.5">
+          <Button variant="ghost" className="!p-1 hover:bg-gray-100 mb-0.5">
             <LanguageIcon
               className={cn(
                 "h-[32px] w-auto",
@@ -42,7 +42,7 @@ export function Header() {
           <Button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             variant="ghost"
-            className="!p-1 hover:bg-primary/10"
+            className="!p-1 hover:bg-gray-100"
           >
             <MoonIcon
               className={cn(
@@ -57,10 +57,15 @@ export function Header() {
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-10 w-10 rounded-full"
+                >
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarFallback>
+                      {user.name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>

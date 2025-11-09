@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { Task, Status } from "@/types";
@@ -10,7 +11,30 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  SelectSeparator,
 } from "@/components/ui/Select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from "@/components/ui/DropdownMenu";
+import {
+  MoveRight,
+  MoveLeft,
+  CirclePlus,
+  MoreVertical,
+  Edit,
+  Trash2,
+  ArrowRight,
+  MoreHorizontal,
+} from "lucide-react";
+import { StarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 interface TaskListProps {
   tasks: Task[];
   statuses: Status[];
@@ -22,6 +46,9 @@ interface TaskListProps {
   onCreateTask: () => void;
   onCreateStatus: () => void;
   onDeleteStatus: (status: Status) => void;
+  onEditTask?: (task: Task) => void;
+  onDeleteTask?: (taskId: string) => void;
+  onChangeTaskStatus?: (taskId: string, statusId: string) => void;
 }
 
 export function TaskList({
@@ -35,13 +62,27 @@ export function TaskList({
   onCreateTask,
   onCreateStatus,
   onDeleteStatus,
+  onEditTask,
+  onDeleteTask,
+  onChangeTaskStatus,
 }: TaskListProps) {
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 10;
+
+  // Calculate pagination
+  const totalTasks = tasks.length;
+  const totalPages = Math.ceil(totalTasks / tasksPerPage);
+  const startIndex = (currentPage - 1) * tasksPerPage;
+  const endIndex = startIndex + tasksPerPage;
+  const currentTasks = tasks.slice(startIndex, endIndex);
+
+  // Reset to first page when tasks change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [tasks.length]);
   if (statuses.length === 0) {
     return <EmptyStatusState onCreateStatus={onCreateStatus} />;
-  }
-
-  if (tasks.length === 0) {
-    return <EmptyTaskState onCreateTask={onCreateTask} />;
   }
 
   return (
@@ -75,82 +116,170 @@ export function TaskList({
             <SelectItem value="all">All</SelectItem>
             {statuses.map((status) => (
               <SelectItem key={status.id} value={status.title}>
-                {status.title}
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-5 h-5 rounded-md"
+                    style={{ backgroundColor: status.color }}
+                  />
+                  <span>{status.title}</span>
+                </div>
               </SelectItem>
             ))}
+
+            <SelectItem value="favorite" onClick={onCreateStatus}>
+              <div className="flex items-center gap-2">
+                <CirclePlus className="w-5 h-5" />
+                <span>Add New Status</span>
+              </div>
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Tasks Table */}
-      <div className="border border-border rounded-lg overflow-hidden bg-background">
-        <table className="w-full">
-          <thead className="bg-secondary border-b border-border">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                Title
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground hidden lg:table-cell">
-                Description
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
-                Status
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task, index) => (
-              <tr
-                key={task.id}
-                className={`border-b border-border hover:bg-secondary/50 transition-colors ${
-                  index === tasks.length - 1 ? "border-b-0" : ""
-                }`}
-              >
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => onToggleFavorite(task.id)}
-                    className="text-lg hover:scale-110 transition-transform"
-                  >
-                    {task.favorite ? "⭐" : "☆"}
-                  </button>
-                </td>
-                <td className="px-6 py-4 font-medium text-foreground">
-                  {task.title}
-                </td>
-                <td className="px-6 py-4 text-muted-foreground text-sm hidden lg:table-cell truncate">
-                  {task.description}
-                </td>
-                <td className="px-6 py-4">
-                  <span
-                    className="inline-block px-3 py-1 rounded-full text-xs font-medium text-foreground"
-                    style={{
-                      backgroundColor: statuses.find(
-                        (s) => s.id === task.statusId
-                      )?.color,
-                    }}
-                  >
-                    {statuses.find((s) => s.id === task.statusId)?.title}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-center">
-                  <button className="text-muted-foreground hover:text-foreground">
-                    ⋯
-                  </button>
-                </td>
+      {tasks.length === 0 ? (
+        <EmptyTaskState onCreateTask={onCreateTask} />
+      ) : (
+        <div className="rounded-lg overflow-hidden bg-background">
+          <table className="w-full">
+            <thead className="">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Title
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground hidden lg:table-cell">
+                  Description
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {currentTasks.map((task, index) => (
+                <tr
+                  key={task.id}
+                  className={`hover:bg-secondary/50 transition-colors ${
+                    index === currentTasks.length - 1 ? "border-b-0" : ""
+                  }`}
+                >
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => onToggleFavorite(task.id)}
+                      className="text-lg hover:scale-110 transition-transform"
+                    >
+                      <StarIcon
+                        className={cn("w-5 h-5 text-primary")}
+                        fill={task.favorite ? "currentColor" : "none"}
+                      />
+                    </button>
+                  </td>
+                  <td className="px-6 py-4 font-medium text-foreground">
+                    {task.title}
+                  </td>
+                  <td className="px-6 py-4 text-muted-foreground text-sm hidden lg:table-cell truncate">
+                    {task.description}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span
+                      className="inline-block px-4 py-2 rounded-md text-xs font-medium text-muted-foreground"
+                      style={{
+                        backgroundColor: statuses.find(
+                          (s) => s.id === task.statusId
+                        )?.color,
+                      }}
+                    >
+                      {statuses.find((s) => s.id === task.statusId)?.title}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger className="cursor-pointer">
+                            <ArrowRight className="mr-2 h-4 w-4" />
+                            Change to
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent>
+                            {statuses
+                              .filter((status) => status.id !== task.statusId)
+                              .map((status) => (
+                                <DropdownMenuItem
+                                  key={status.id}
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    onChangeTaskStatus?.(task.id, status.id)
+                                  }
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <div
+                                      className="w-3 h-3 rounded-sm"
+                                      style={{ backgroundColor: status.color }}
+                                    />
+                                    <span>{status.title}</span>
+                                  </div>
+                                </DropdownMenuItem>
+                              ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => onEditTask?.(task)}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="cursor-pointe"
+                          onClick={() => onDeleteTask?.(task.id)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-6 text-sm text-muted-foreground">
-        <button className="hover:text-foreground">← Previous</button>
-        <span>1-{tasks.length} of 120</span>
-        <button className="hover:text-foreground">Next →</button>
-      </div>
+      {totalTasks > tasksPerPage && (
+        <div className="flex items-center justify-between mt-6 text-sm text-muted-foreground">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <MoveLeft className="w-3 h-3 mr-2" />
+            Previous
+          </Button>
+          <span>
+            {startIndex + 1}-{Math.min(endIndex, totalTasks)} of {totalTasks}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            Next
+            <MoveRight className="w-3 h-3 ml-2" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

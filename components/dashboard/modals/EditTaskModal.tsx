@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { Task, Status } from "@/types";
@@ -15,24 +15,38 @@ import {
 } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 
-interface CreateTaskModalProps {
+interface EditTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (task: Omit<Task, "id" | "favorite" | "userId">) => void;
+  onSubmit: (task: Omit<Task, "id" | "userId">) => void;
   statuses: Status[];
+  task: Task | null;
 }
 
-export function CreateTaskModal({
+export function EditTaskModal({
   isOpen,
   onClose,
   onSubmit,
   statuses,
-}: CreateTaskModalProps) {
+  task,
+}: EditTaskModalProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    statusId: statuses[0]?.id || "",
+    statusId: "",
+    favorite: false,
   });
+
+  useEffect(() => {
+    if (task && isOpen) {
+      setFormData({
+        title: task.title,
+        description: task.description,
+        statusId: task.statusId,
+        favorite: task.favorite,
+      });
+    }
+  }, [task, isOpen]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -50,21 +64,17 @@ export function CreateTaskModal({
     e.preventDefault();
     if (formData.title.trim()) {
       onSubmit(formData);
-      setFormData({
-        title: "",
-        description: "",
-        statusId: statuses[0]?.id || "",
-      });
+      onClose();
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !task) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-background rounded-lg p-8 max-w-sm w-full mx-4 shadow-lg">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Create Task</h2>
+          <h2 className="text-2xl font-bold text-foreground">Edit Task</h2>
           <button
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground text-2xl leading-none"
@@ -94,7 +104,7 @@ export function CreateTaskModal({
             </label>
             <Textarea
               name="description"
-              placeholder="Type somthing ..."
+              placeholder="Type something ..."
               value={formData.description}
               onChange={handleChange}
               className="w-full"
@@ -127,7 +137,7 @@ export function CreateTaskModal({
           </div>
 
           <Button type="submit" className="w-full font-bold">
-            Create
+            Update
           </Button>
         </form>
       </div>

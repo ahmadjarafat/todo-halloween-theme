@@ -93,10 +93,7 @@ export function CreateStatusModal({
             </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold h-11"
-          >
+          <Button type="submit" className="w-full">
             Create
           </Button>
         </form>
