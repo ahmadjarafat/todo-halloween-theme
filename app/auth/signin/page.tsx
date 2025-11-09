@@ -18,6 +18,7 @@ export default function SignIn() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -47,21 +48,21 @@ export default function SignIn() {
   };
 
   return (
-    <div className="w-full">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-foreground mb-2">Sign in</h1>
-        <p className="text-muted-foreground">
-          Log in to unlock tailored content and stay connected with your
-          community.
-        </p>
+    <div className="w-full max-w-[20rem] md:max-w-[32rem] lg:max-w-[22.5rem]">
+      <div className="text-center mb-10 md:mb-14 lg:mb-6">
+        <h1 className="text-[2rem] font-bold text-foreground mb-6 lg:mb-3">
+          Sign in
+        </h1>
+        <div className="flex flex-col gap-y-2 text-[var(--muted-text)]">
+          <p>Log in to unlock tailored content and stay</p>
+          <p>connected with your community.</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="lg:space-y-4 space-y-10">
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            Email
-          </label>
           <Input
+            label="Email"
             type="email"
             name="email"
             placeholder="Email"
@@ -72,10 +73,8 @@ export default function SignIn() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            Password
-          </label>
           <Input
+            label="Password"
             type="password"
             name="password"
             placeholder="Password"
@@ -92,17 +91,18 @@ export default function SignIn() {
         )}
 
         <Button
+          disabled={!formData.email || !formData.password}
           type="submit"
-          className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold h-11"
+          className="w-full font-semibold mt-0 md:mt-6 lg:mt-2"
         >
           Sign in
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-[var(--muted-text)] mt-0 md:mt-0 lg:mt-2 font-bold">
           Don't have an account?{" "}
           <Link
             href="/auth/signup"
-            className="text-red-600 hover:text-red-700 font-semibold"
+            className="text-red-600 hover:text-red-700 font-normal underline"
           >
             Sign up
           </Link>
