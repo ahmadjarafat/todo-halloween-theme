@@ -3,13 +3,13 @@
 import type React from "react";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignIn() {
-  const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,17 +34,12 @@ export default function SignIn() {
       return;
     }
 
-    // Simple demo authentication
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      const user = JSON.parse(stored);
-      if (user.email === formData.email) {
-        router.push("/dashboard");
-        return;
-      }
+    // Use the login function from AuthContext
+    const result = login(formData.email, formData.password);
+    
+    if (!result.success) {
+      setError(result.message || "Login failed");
     }
-
-    setError("Invalid email or password");
   };
 
   return (

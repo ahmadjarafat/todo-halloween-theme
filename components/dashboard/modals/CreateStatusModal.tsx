@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import type { Status } from "@/app/dashboard/page"
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import type { Status } from "@/types";
 
 interface CreateStatusModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (status: Omit<Status, "id">) => void
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (status: Omit<Status, "id" | "userId">) => void;
 }
 
 const COLORS = [
@@ -21,40 +21,48 @@ const COLORS = [
   "#22c55e", // Green
   "#a855f7", // Purple
   "#d4a574", // Tan
-  "#3b82f6", // Sky Blue
-]
+];
 
-export function CreateStatusModal({ isOpen, onClose, onSubmit }: CreateStatusModalProps) {
-  const [title, setTitle] = useState("")
-  const [selectedColor, setSelectedColor] = useState(COLORS[0])
+export function CreateStatusModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: CreateStatusModalProps) {
+  const [title, setTitle] = useState("");
+  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (title.trim()) {
       onSubmit({
         title,
         color: selectedColor,
-      })
-      setTitle("")
-      setSelectedColor(COLORS[0])
+      });
+      setTitle("");
+      setSelectedColor(COLORS[0]);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4 shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-foreground">Create Status</h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-2xl leading-none">
+          <button
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground text-2xl leading-none"
+          >
             ×
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Status title</label>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Status title
+            </label>
             <Input
               type="text"
               placeholder="Done"
@@ -65,7 +73,9 @@ export function CreateStatusModal({ isOpen, onClose, onSubmit }: CreateStatusMod
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-4">Select Color</label>
+            <label className="block text-sm font-medium text-foreground mb-4">
+              Select Color
+            </label>
             <div className="flex gap-3 flex-wrap">
               {COLORS.map((color) => (
                 <button
@@ -73,7 +83,9 @@ export function CreateStatusModal({ isOpen, onClose, onSubmit }: CreateStatusMod
                   type="button"
                   onClick={() => setSelectedColor(color)}
                   className={`w-10 h-10 rounded-lg transition-transform ${
-                    selectedColor === color ? "ring-2 ring-offset-2 ring-gray-400 scale-110" : ""
+                    selectedColor === color
+                      ? "ring-2 ring-offset-2 ring-gray-400 scale-110"
+                      : ""
                   }`}
                   style={{ backgroundColor: color }}
                 />
@@ -81,11 +93,14 @@ export function CreateStatusModal({ isOpen, onClose, onSubmit }: CreateStatusMod
             </div>
           </div>
 
-          <Button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold h-11">
+          <Button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold h-11"
+          >
             Create
           </Button>
         </form>
       </div>
     </div>
-  )
+  );
 }

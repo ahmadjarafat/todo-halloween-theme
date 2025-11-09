@@ -5,20 +5,20 @@ import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import type { Task } from "@/app/dashboard/page"
+import type { Task, Status } from "@/types"
 
 interface CreateTaskModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (task: Omit<Task, "id" | "favorite">) => void
-  statuses: string[]
+  onSubmit: (task: Omit<Task, "id" | "favorite" | "userId">) => void
+  statuses: Status[]
 }
 
 export function CreateTaskModal({ isOpen, onClose, onSubmit, statuses }: CreateTaskModalProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    status: statuses[0] || "To Do",
+    statusId: statuses[0]?.id || "",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -36,7 +36,7 @@ export function CreateTaskModal({ isOpen, onClose, onSubmit, statuses }: CreateT
       setFormData({
         title: "",
         description: "",
-        status: statuses[0] || "To Do",
+        statusId: statuses[0]?.id || "",
       })
     }
   }
@@ -81,14 +81,14 @@ export function CreateTaskModal({ isOpen, onClose, onSubmit, statuses }: CreateT
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">Status</label>
             <select
-              name="status"
-              value={formData.status}
+              name="statusId"
+              value={formData.statusId}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             >
               {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
+                <option key={status.id} value={status.id}>
+                  {status.title}
                 </option>
               ))}
             </select>

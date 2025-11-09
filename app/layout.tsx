@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 const jannaLT = localFont({
   src: [
@@ -67,7 +68,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main>{children}</main>
+          <AuthProvider>
+            <main>{children}</main>
+          </AuthProvider>
         </ThemeProvider>
         <Analytics />
       </body>

@@ -1,128 +1,127 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader"
-import { TaskList } from "@/components/dashboard/TaskList"
-import { CreateTaskModal } from "@/components/dashboard/modals/CreateTaskModal"
-import { CreateStatusModal } from "@/components/dashboard/modals/CreateStatusModal"
-import { DeleteStatusModal } from "@/components/dashboard/modals/DeleteStatusModal"
-
-export interface Task {
-  id: string
-  title: string
-  description: string
-  status: string
-  favorite: boolean
-}
-
-export interface Status {
-  id: string
-  title: string
-  color: string
-}
+import { useState, useEffect } from "react";
+import { TaskList } from "@/components/dashboard/TaskList";
+import { CreateTaskModal } from "@/components/dashboard/modals/CreateTaskModal";
+import { CreateStatusModal } from "@/components/dashboard/modals/CreateStatusModal";
+import { DeleteStatusModal } from "@/components/dashboard/modals/DeleteStatusModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { Task, Status } from "@/types";
+import { addTask, editTask, deleteTask, getUserTasks } from "@/utils/taskUtils";
+import { addStatus, deleteStatus, getUserStatuses } from "@/utils/statusUtils";
 
 export default function Dashboard() {
-  const router = useRouter()
-  const [user, setUser] = useState<any>(null)
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [statuses, setStatuses] = useState<Status[]>([
-    { id: "1", title: "To Do", color: "#e5e7eb" },
-    { id: "2", title: "In Progress", color: "#c7d2fe" },
-    { id: "3", title: "Done", color: "#d1d5db" },
-  ])
-  const [showCreateTask, setShowCreateTask] = useState(false)
-  const [showCreateStatus, setShowCreateStatus] = useState(false)
-  const [showDeleteStatus, setShowDeleteStatus] = useState(false)
-  const [statusToDelete, setStatusToDelete] = useState<Status | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [statuses, setStatuses] = useState<Status[]>([]);
+  const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showCreateStatus, setShowCreateStatus] = useState(false);
+  const [showDeleteStatus, setShowDeleteStatus] = useState(false);
+  const [statusToDelete, setStatusToDelete] = useState<Status | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const { user } = useAuth();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-    if (!storedUser) {
-      router.push("/auth/signin")
-      return
+    if (user) {
+      // Load user-specific tasks and statuses
+      const userTasks = getUserTasks(user.id);
+      const userStatuses = getUserStatuses(user.id);
+      
+      setTasks(userTasks);
+      setStatuses(userStatuses);
     }
-    setUser(JSON.parse(storedUser))
+  }, [user]);
 
-    // Load tasks from localStorage
-    const storedTasks = localStorage.getItem("tasks")
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks))
-    } else {
-      // Demo tasks
-      const demoTasks = Array(8)
-        .fill(null)
-        .map((_, i) => ({
-          id: String(i + 1),
-          title: "Design landing Page",
-          description: "flfasdmfsdmfmsdlvm,xcrmv.mxc.vmxcmlxcmvl",
-          status: "In Progress",
-          favorite: i === 0,
-        }))
-      setTasks(demoTasks)
+  useEffect(() => {
+    // Demo tasks for new users
+    if (user && tasks.length === 0 && statuses.length > 0) {
+      const demoTasksData = [
+        { title: "Design landing page", description: "Create a modern and responsive landing page design", statusId: statuses[1]?.id || statuses[0]?.id },
+        { title: "Setup authentication", description: "Implement user login and registration functionality", statusId: statuses[0]?.id },
+        { title: "Create API endpoints", description: "Build REST API for data management", statusId: statuses[1]?.id || statuses[0]?.id },
+        { title: "Write documentation", description: "Document the API and user interface", statusId: statuses[2]?.id || statuses[0]?.id },
+      ];
+      
+      demoTasksData.forEach((taskData, i) => {
+        if (taskData.statusId) {
+          const newTask = addTask(user.id, { ...taskData, favorite: i === 0 });
+          setTasks(prev => [...prev, newTask]);
+        }
+      });
     }
-  }, [router])
+  }, [user, statuses]);
 
-  const handleAddTask = (task: Omit<Task, "id" | "favorite">) => {
-    const newTask: Task = {
-      ...task,
-      id: String(tasks.length + 1),
-      favorite: false,
-    }
-    const updatedTasks = [...tasks, newTask]
-    setTasks(updatedTasks)
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks))
-    setShowCreateTask(false)
-  }
+  const handleAddTask = (task: Omit<Task, "id" | "favorite" | "userId">) => {
+    if (!user) return;
+    
+    const newTask = addTask(user.id, { ...task, favorite: false });
+    setTasks(prev => [...prev, newTask]);
+    setShowCreateTask(false);
+  };
 
   const handleToggleFavorite = (taskId: string) => {
-    const updatedTasks = tasks.map((t) => (t.id === taskId ? { ...t, favorite: !t.favorite } : t))
-    setTasks(updatedTasks)
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks))
-  }
-
-  const handleAddStatus = (status: Omit<Status, "id">) => {
-    const newStatus: Status = {
-      ...status,
-      id: String(statuses.length + 1),
+    if (!user) return;
+    
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      const updatedTask = editTask(user.id, taskId, { favorite: !task.favorite });
+      if (updatedTask) {
+        setTasks(prev => prev.map(t => t.id === taskId ? updatedTask : t));
+      }
     }
-    const updatedStatuses = [...statuses, newStatus]
-    setStatuses(updatedStatuses)
-    localStorage.setItem("statuses", JSON.stringify(updatedStatuses))
-    setShowCreateStatus(false)
-  }
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    if (!user) return;
+    
+    const success = deleteTask(user.id, taskId);
+    if (success) {
+      setTasks(prev => prev.filter(t => t.id !== taskId));
+    }
+  };
+
+  const handleAddStatus = (status: Omit<Status, "id" | "userId">) => {
+    if (!user) return;
+    
+    const newStatus = addStatus(user.id, status);
+    setStatuses(prev => [...prev, newStatus]);
+    setShowCreateStatus(false);
+  };
 
   const handleDeleteStatus = (status: Status) => {
-    setStatusToDelete(status)
-    setShowDeleteStatus(true)
-  }
+    setStatusToDelete(status);
+    setShowDeleteStatus(true);
+  };
 
   const confirmDeleteStatus = () => {
-    if (statusToDelete) {
-      const updatedStatuses = statuses.filter((s) => s.id !== statusToDelete.id)
-      setStatuses(updatedStatuses)
-      localStorage.setItem("statuses", JSON.stringify(updatedStatuses))
-      setShowDeleteStatus(false)
-      setStatusToDelete(null)
+    if (!user || !statusToDelete) return;
+    
+    const success = deleteStatus(user.id, statusToDelete.id);
+    if (success) {
+      setStatuses(prev => prev.filter(s => s.id !== statusToDelete.id));
+      setShowDeleteStatus(false);
+      setStatusToDelete(null);
     }
-  }
+  };
 
   const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = filterStatus === "all" || task.status === filterStatus
-    return matchesSearch && matchesStatus
-  })
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    
+    // Find the status object for this task
+    const taskStatus = statuses.find(status => status.id === task.statusId);
+    const matchesStatus =
+      filterStatus === "all" || taskStatus?.title === filterStatus;
+    return matchesSearch && matchesStatus;
+  });
 
   if (!user) {
-    return null
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader user={user} />
-
       <main className="max-w-full">
         <TaskList
           tasks={filteredTasks}
@@ -142,7 +141,7 @@ export default function Dashboard() {
         isOpen={showCreateTask}
         onClose={() => setShowCreateTask(false)}
         onSubmit={handleAddTask}
-        statuses={statuses.map((s) => s.title)}
+        statuses={statuses}
       />
 
       <CreateStatusModal
@@ -158,5 +157,5 @@ export default function Dashboard() {
         onConfirm={confirmDeleteStatus}
       />
     </div>
-  )
+  );
 }

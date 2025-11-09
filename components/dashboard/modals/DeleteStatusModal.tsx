@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
-import type { Status } from "@/app/dashboard/page"
+import type { Status } from "@/types"
 
 interface DeleteStatusModalProps {
   isOpen: boolean

@@ -1,21 +1,27 @@
-"use client"
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import type { Task, Status } from "@/app/dashboard/page"
-import { EmptyTaskState } from "./EmptyTaskState"
-import { EmptyStatusState } from "./EmptyStatusState"
-
+"use client";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import type { Task, Status } from "@/types";
+import { EmptyTaskState } from "./EmptyTaskState";
+import { EmptyStatusState } from "./EmptyStatusState";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/Select";
 interface TaskListProps {
-  tasks: Task[]
-  statuses: Status[]
-  searchQuery: string
-  filterStatus: string
-  onSearchChange: (query: string) => void
-  onFilterChange: (status: string) => void
-  onToggleFavorite: (taskId: string) => void
-  onCreateTask: () => void
-  onCreateStatus: () => void
-  onDeleteStatus: (status: Status) => void
+  tasks: Task[];
+  statuses: Status[];
+  searchQuery: string;
+  filterStatus: string;
+  onSearchChange: (query: string) => void;
+  onFilterChange: (status: string) => void;
+  onToggleFavorite: (taskId: string) => void;
+  onCreateTask: () => void;
+  onCreateStatus: () => void;
+  onDeleteStatus: (status: Status) => void;
 }
 
 export function TaskList({
@@ -31,20 +37,22 @@ export function TaskList({
   onDeleteStatus,
 }: TaskListProps) {
   if (statuses.length === 0) {
-    return <EmptyStatusState onCreateStatus={onCreateStatus} />
+    return <EmptyStatusState onCreateStatus={onCreateStatus} />;
   }
 
   if (tasks.length === 0) {
-    return <EmptyTaskState onCreateTask={onCreateTask} />
+    return <EmptyTaskState onCreateTask={onCreateTask} />;
   }
 
   return (
     <div className="p-6 lg:p-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground mb-1">My Tasks</h1>
-      </div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-xl font-bold mb-1">My Tasks</h1>
 
+        <Button onClick={onCreateTask} className="font-bold">
+          Create New Task
+        </Button>
+      </div>
       {/* Search and Filter Bar */}
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="flex-1">
@@ -56,27 +64,22 @@ export function TaskList({
           />
         </div>
 
-        <div className="flex gap-4">
-          <select
-            value={filterStatus}
-            onChange={(e) => onFilterChange(e.target.value)}
-            className="px-4 py-2 border border-border rounded-md bg-background text-foreground text-sm font-medium cursor-pointer hover:bg-secondary"
-          >
-            <option value="all">Status</option>
+        <Select
+          value={filterStatus}
+          onValueChange={(value) => onFilterChange(value)}
+        >
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
             {statuses.map((status) => (
-              <option key={status.id} value={status.title}>
+              <SelectItem key={status.id} value={status.title}>
                 {status.title}
-              </option>
+              </SelectItem>
             ))}
-          </select>
-
-          <Button
-            onClick={onCreateTask}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold whitespace-nowrap"
-          >
-            Create New Task
-          </Button>
-        </div>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Tasks Table */}
@@ -85,11 +88,15 @@ export function TaskList({
           <thead className="bg-secondary border-b border-border">
             <tr>
               <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Title</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                Title
+              </th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-foreground hidden lg:table-cell">
                 Description
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Status</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">
+                Status
+              </th>
               <th className="px-6 py-4 text-left text-sm font-semibold text-foreground w-12"></th>
             </tr>
           </thead>
@@ -109,7 +116,9 @@ export function TaskList({
                     {task.favorite ? "⭐" : "☆"}
                   </button>
                 </td>
-                <td className="px-6 py-4 font-medium text-foreground">{task.title}</td>
+                <td className="px-6 py-4 font-medium text-foreground">
+                  {task.title}
+                </td>
                 <td className="px-6 py-4 text-muted-foreground text-sm hidden lg:table-cell truncate">
                   {task.description}
                 </td>
@@ -117,14 +126,18 @@ export function TaskList({
                   <span
                     className="inline-block px-3 py-1 rounded-full text-xs font-medium text-foreground"
                     style={{
-                      backgroundColor: statuses.find((s) => s.title === task.status)?.color,
+                      backgroundColor: statuses.find(
+                        (s) => s.id === task.statusId
+                      )?.color,
                     }}
                   >
-                    {task.status}
+                    {statuses.find((s) => s.id === task.statusId)?.title}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-center">
-                  <button className="text-muted-foreground hover:text-foreground">⋯</button>
+                  <button className="text-muted-foreground hover:text-foreground">
+                    ⋯
+                  </button>
                 </td>
               </tr>
             ))}
@@ -139,5 +152,5 @@ export function TaskList({
         <button className="hover:text-foreground">Next →</button>
       </div>
     </div>
-  )
+  );
 }

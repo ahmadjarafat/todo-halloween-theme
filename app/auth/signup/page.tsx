@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -14,8 +14,8 @@ import { Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SignUp() {
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { signup } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -79,19 +79,19 @@ export default function SignUp() {
       return;
     }
 
-    // Store in localStorage for demo
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        avatar:
-          formData.avatar ||
-          `https://api.dicebear.com/7.x/avataaars/svg?seed=${formData.name}`,
-      })
-    );
+    // Use the signup function from AuthContext
+    const result = signup({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      avatar: formData.avatar || "/avatar.png",
+      tasks: [],
+      statuses: [],
+    });
 
-    router.push("/dashboard");
+    if (!result.success) {
+      setError(result.message || "Signup failed");
+    }
   };
 
   return (
