@@ -38,7 +38,7 @@ export function EditTaskModal({
   });
 
   useEffect(() => {
-    if (task && isOpen) {
+    if (task) {
       setFormData({
         title: task.title,
         description: task.description,

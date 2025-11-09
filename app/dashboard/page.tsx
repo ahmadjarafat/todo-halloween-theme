@@ -113,7 +113,9 @@ export default function Dashboard() {
 
     const updatedTask = editTask(user.id, taskToEdit.id, taskData);
     if (updatedTask) {
-      setTasks(prev => prev.map(t => t.id === taskToEdit.id ? updatedTask : t));
+      setTasks((prev) =>
+        prev.map((t) => (t.id === taskToEdit.id ? updatedTask : t))
+      );
       setShowEditTask(false);
       setTaskToEdit(null);
     }
@@ -124,7 +126,7 @@ export default function Dashboard() {
 
     const updatedTask = editTask(user.id, taskId, { statusId });
     if (updatedTask) {
-      setTasks(prev => prev.map(t => t.id === taskId ? updatedTask : t));
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? updatedTask : t)));
     }
   };
 
