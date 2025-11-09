@@ -31,30 +31,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check localStorage for existing logged in user
     const currentUser = localStorage.getItem("currentUser");
-    console.log(currentUser);
+
     if (currentUser) {
       try {
         const parsedUser = JSON.parse(currentUser);
         setUser(parsedUser);
-        setLoading(false);
-        // Redirect to dashboard if on auth pages
-        if (pathname?.startsWith("/auth")) {
-          router.push("/dashboard");
-        }
       } catch (error) {
         console.error("Failed to parse current user from localStorage");
         localStorage.removeItem("currentUser");
-        setLoading(false);
-      }
-    } else {
-      console.log("No user logged in");
-      setLoading(false);
-      // No user logged in, redirect to signin if not already on auth pages
-      if (pathname && !pathname.startsWith("/auth")) {
-        router.push("/auth/signin");
+        // Remove cookie as well
+        document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       }
     }
-  }, []); // Remove dependencies to run only once on mount
+    setLoading(false);
+  }, []); // Run only once on mount
 
   const signup = (userData: Omit<User, "id">) => {
     // Get existing users or initialize empty array
@@ -86,6 +76,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Log the user in immediately
     localStorage.setItem("currentUser", JSON.stringify(newUser));
+    // Set cookie for middleware
+    document.cookie = `currentUser=${JSON.stringify(newUser)}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
     setUser(newUser);
     router.push("/dashboard");
 
@@ -104,6 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (matchedUser) {
       // Login successful
       localStorage.setItem("currentUser", JSON.stringify(matchedUser));
+      // Set cookie for middleware
+      document.cookie = `currentUser=${JSON.stringify(matchedUser)}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
       setUser(matchedUser);
       router.push("/dashboard");
       return { success: true };
@@ -115,6 +109,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem("currentUser");
+    // Remove cookie
+    document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setUser(null);
     router.push("/auth/signin");
   };

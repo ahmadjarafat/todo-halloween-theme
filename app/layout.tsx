@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import "./globals.css";
 const jannaLT = localFont({
   src: [
