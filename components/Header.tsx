@@ -4,48 +4,43 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/Button";
 import MoonIcon from "@/app/assets/icons/moon.svg";
 import LanguageIcon from "@/app/assets/icons/language.svg";
-import Logo from "@/app/assets/icons/logo-primary.svg";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import Image from "next/image";
+import Logo from "@/app/assets/icons/logo.svg";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
 
+  console.log(theme);
   return (
     <header className="bg-background w-full" suppressHydrationWarning>
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Image
-          src={Logo}
-          alt="Logo"
-          width={40}
-          height={40}
-          className="h-10 w-auto"
-        />
+      <div className="container mx-auto px-4 py-3.5 flex items-center justify-between">
+        <div className="flex items-center font-rubik mt-1.5 ml-2">
+          <Logo className="h-10 w-auto text-primary -mr-1" />
+          <div className="text-2xl text-primary mb-2">TODO</div>
+        </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 hover:bg-primary/10"
-          >
-            <Image
-              src={MoonIcon}
-              alt="Toggle theme"
-              width={24}
-              height={24}
-              className="h-6 w-6"
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" className="p-2 hover:bg-primary/10 mb-0.5">
+            <LanguageIcon
+              className={cn(
+                theme === "dark"
+                  ? "text-[#474747] stroke-white"
+                  : "text-transparent stroke-[#28292e]"
+              )}
             />
           </Button>
-          <Button variant="ghost" size="sm" className="p-2 hover:bg-primary/10">
-            <Image
-              src={LanguageIcon}
-              alt="Language"
-              width={24}
-              height={24}
-              className="h-6 w-6"
+
+          <Button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            variant="ghost"
+            className="p-2 hover:bg-primary/10"
+          >
+            <MoonIcon
+              className={cn(
+                theme === "dark"
+                  ? "text-primary stroke-primary"
+                  : "text-transparent stroke-[#28292e] stroke-2"
+              )}
             />
           </Button>
         </div>
