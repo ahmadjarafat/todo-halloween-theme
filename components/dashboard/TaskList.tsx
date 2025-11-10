@@ -111,12 +111,13 @@ export function TaskList({
       </div>
       {/* Search and Filter Bar */}
       <div className="flex flex-col lg:flex-row gap-x-2 gap-y-2 mb-12">
-        <div className="flex w-full">
+        <div className="flex w-full items-center ml-2">
+          <Search className="w-4 h-4 -mr-6" />
           <Input
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full"
+            className="w-full pl-7"
           />
         </div>
 
