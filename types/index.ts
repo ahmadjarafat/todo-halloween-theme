@@ -8,13 +8,14 @@ export interface Task {
 }
 
 export const StatusColor = {
-  "#ec4899": "#ec4899", // Pink
-  "#6366f1": "#6366f1", // Indigo
-  "#60a5fa": "#60a5fa", // Blue
-  "#3b82f6": "#3b82f6", // Blue Dark
-  "#22c55e": "#22c55e", // Green
-  "#a855f7": "#a855f7", // Purple
-  "#d4a574": "#d4a574", // Tan
+  "#e11d48": "#e11d48", // Pink
+  "#818cf8": "#818cf8", // Indigo
+  "#93c5fd": "#93c5fd", // Light Blue
+  "#1e3a8a": "#1e3a8a", // Navy Blue
+  "#4d7c0f": "#4d7c0f", // Green
+  "#8b5cf6": "#8b5cf6", // Purple
+  "#a78b7e": "#a78b7e", // Taupe
+  "#3b82f6": "#3b82f6", // Bright Blue
 };
 
 export type StatusColor = keyof typeof StatusColor;

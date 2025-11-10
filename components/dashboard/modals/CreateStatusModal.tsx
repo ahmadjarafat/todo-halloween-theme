@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { Status } from "@/types";
 import { StatusColor } from "@/types";
+import { ModalWrapper } from "@/components/ui/ModalWrapper";
 interface CreateStatusModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,7 +20,7 @@ export function CreateStatusModal({
   onSubmit,
 }: CreateStatusModalProps) {
   const [title, setTitle] = useState("");
-  const [selectedColor, setSelectedColor] = useState<StatusColor>("#ec4899");
+  const [selectedColor, setSelectedColor] = useState<StatusColor>("#e11d48");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,65 +30,54 @@ export function CreateStatusModal({
         color: selectedColor,
       });
       setTitle("");
-      setSelectedColor("#ec4899");
+      setSelectedColor("#e11d48");
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-8 max-w-sm w-full mx-4 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Create Status</h2>
-          <button
-            onClick={onClose}
-            className="text-muted-foreground hover:text-foreground text-2xl leading-none"
-          >
-            ×
-          </button>
+    <ModalWrapper
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Create Status"
+      mobileSide="bottom"
+    >
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Input
+          label="Status title"
+          labelClassName="font-medium"
+          type="text"
+          required
+          placeholder="Done"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full"
+        />
+
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-4">
+            Select Color
+          </label>
+          <div className="flex gap-3 flex-wrap">
+            {Object.values(StatusColor).map((color) => (
+              <button
+                key={color}
+                type="button"
+                onClick={() => setSelectedColor(color as StatusColor)}
+                className={`sm:w-10 sm:h-10 w-8 h-8 rounded-lg transition-transform ${
+                  selectedColor === color
+                    ? "ring-2 ring-offset-2 ring-gray-400 scale-110"
+                    : ""
+                }`}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Status title
-            </label>
-            <Input
-              type="text"
-              placeholder="Done"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-4">
-              Select Color
-            </label>
-            <div className="flex gap-3 flex-wrap">
-              {Object.values(StatusColor).map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => setSelectedColor(color as StatusColor)}
-                  className={`w-10 h-10 rounded-lg transition-transform ${
-                    selectedColor === color
-                      ? "ring-2 ring-offset-2 ring-gray-400 scale-110"
-                      : ""
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
-          </div>
-
-          <Button type="submit" className="w-full">
-            Create
-          </Button>
-        </form>
-      </div>
-    </div>
+        <Button type="submit" className="w-full font-bold mt-6">
+          Create
+        </Button>
+      </form>
+    </ModalWrapper>
   );
 }

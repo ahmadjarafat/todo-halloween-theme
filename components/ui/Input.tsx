@@ -7,17 +7,27 @@ function Input({
   type,
   label,
   error,
+  labelClassName,
   ...props
-}: React.ComponentProps<"input"> & { label?: string; error?: string }) {
+}: React.ComponentProps<"input"> & {
+  label?: string;
+  error?: string;
+  labelClassName?: string;
+}) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-y-1.5",
+        "flex flex-col gap-y-1",
         className?.includes("w-full") && "w-full"
       )}
     >
       {label && (
-        <label className="block text-sm font-semibold text-foreground">
+        <label
+          className={cn(
+            "block text-sm font-semibold text-foreground",
+            labelClassName
+          )}
+        >
           {label}
         </label>
       )}

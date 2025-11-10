@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
+import { ModalWrapper } from "@/components/ui/ModalWrapper";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -58,79 +59,66 @@ export function CreateTaskModal({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-background rounded-lg p-8 max-w-sm w-full mx-4 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Create Task</h2>
-          <button
-            onClick={onClose}
-            className="text-muted-foreground hover:text-foreground text-2xl leading-none"
-          >
-            ×
-          </button>
+    <ModalWrapper
+      open={isOpen}
+      onOpenChange={onClose}
+      title="Create Task"
+      mobileSide="bottom"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4 mt-5">
+        <Input
+          label="Task title"
+          labelClassName="font-medium"
+          type="text"
+          name="title"
+          required
+          placeholder="Kill the Boss"
+          value={formData.title}
+          onChange={handleChange}
+          className="w-full"
+        />
+
+        <div className="flex flex-col gap-y-1">
+          <label className="block text-sm font-medium">Description</label>
+          <Textarea
+            name="description"
+            required
+            placeholder="Type somthing ..."
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full"
+            rows={6}
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Task title
-            </label>
-            <Input
-              type="text"
-              name="title"
-              placeholder="Kill the Boss"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full"
-            />
-          </div>
+        <div className="flex flex-col gap-y-1">
+          <label className="block text-sm font-medium">Status</label>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Description
-            </label>
-            <Textarea
-              name="description"
-              placeholder="Type somthing ..."
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full"
-              rows={8}
-            />
-          </div>
+          <Select
+            value={formData.statusId}
+            onValueChange={(value) =>
+              setFormData({ ...formData, statusId: value })
+            }
+            required
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a status" />
+            </SelectTrigger>
+            <SelectContent>
+              {statuses.map((status) => (
+                <SelectItem key={status.id} value={status.id}>
+                  {status.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Status
-            </label>
-
-            <Select
-              value={formData.statusId}
-              onValueChange={(value) =>
-                setFormData({ ...formData, statusId: value })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statuses.map((status) => (
-                  <SelectItem key={status.id} value={status.id}>
-                    {status.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <Button type="submit" className="w-full font-bold">
-            Create
-          </Button>
-        </form>
-      </div>
-    </div>
+        <Button type="submit" className="w-full font-bold mt-6">
+          Create
+        </Button>
+      </form>
+    </ModalWrapper>
   );
 }

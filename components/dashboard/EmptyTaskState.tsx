@@ -19,15 +19,15 @@ export function EmptyTaskState({ onCreateTask }: EmptyTaskStateProps) {
           height={100}
         />
 
-        <h2 className="text-2xl font-bold mb-2">
+        <h2 className="text-2xl text-center font-bold mb-2">
           No Tasks... Just an Eerie Silence!
         </h2>
         <div className="flex flex-col items-center justify-center max-w-lg gap-y-2 mb-6">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm text-center">
             It's so empty here... almost too empty. Did your tasks vanish into
             the void?
           </p>
-          <p className="text-muted-foreground text-sm max-w-sm">
+          <p className="text-muted-foreground text-sm max-w-sm text-center">
             Summon a new task before the ghosts start whispering...
           </p>
         </div>

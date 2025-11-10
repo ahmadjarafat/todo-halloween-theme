@@ -36,6 +36,7 @@ import {
   Zap,
 } from "lucide-react";
 import { StarIcon } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 interface TaskListProps {
@@ -75,14 +76,15 @@ export function TaskList({
 
   const isMobile = useIsMobile();
 
-  const statusColorToBackgroundColorMap: Record<StatusColor, string> = {
-    "#ec4899": "#fce7f3", // light pink (≈5x lighter)
-    "#6366f1": "#e0e7ff", // light indigo
-    "#60a5fa": "#dbeafe", // light sky blue
+  const statusColorToBackgroundColorMap: Record<string, string> = {
+    "#e11d48": "#fce7f3", // light pink
+    "#818cf8": "#e0e7ff", // light indigo
+    "#93c5fd": "#dbeafe", // light sky blue
+    "#1e3a8a": "#dbeafe", // light navy
+    "#4d7c0f": "#ecfccb", // light green
+    "#8b5cf6": "#f3e8ff", // light purple
+    "#a78b7e": "#f5f5f4", // light taupe
     "#3b82f6": "#dbeafe", // light blue
-    "#22c55e": "#dcfce7", // light green
-    "#a855f7": "#f3e8ff", // light purple
-    "#d4a574": "#fef3c7", // light amber
   };
 
   // Calculate pagination
@@ -123,7 +125,13 @@ export function TaskList({
 
         <Select
           value={filterStatus}
-          onValueChange={(value) => onFilterChange(value)}
+          onValueChange={(value) => {
+            if (value === "create-new-status") {
+              onCreateStatus();
+            } else {
+              onFilterChange(value);
+            }
+          }}
         >
           <SelectTrigger className="w-full lg:w-[12.5rem]">
             <SelectValue placeholder="Status" />
@@ -142,7 +150,7 @@ export function TaskList({
               </SelectItem>
             ))}
 
-            <SelectItem value="favorite" onClick={onCreateStatus}>
+            <SelectItem value="create-new-status">
               <div className="flex items-center gap-2">
                 <CirclePlus className="w-5 h-5" />
                 <span>Create New Status</span>
@@ -188,7 +196,7 @@ export function TaskList({
                         className="text-lg hover:scale-110 transition-transform"
                       >
                         <StarIcon
-                          className={cn("w-6 h-6 text-primary")}
+                          className={cn("w-6 h-6 text-primary stroke-1")}
                           fill={task.favorite ? "currentColor" : "none"}
                         />
                       </button>
