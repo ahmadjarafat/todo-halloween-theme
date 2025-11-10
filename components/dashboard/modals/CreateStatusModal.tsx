@@ -6,22 +6,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { Status } from "@/types";
-
+import { StatusColor } from "@/types";
 interface CreateStatusModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (status: Omit<Status, "id" | "userId">) => void;
 }
-
-const COLORS = [
-  "#ec4899", // Pink
-  "#6366f1", // Indigo
-  "#60a5fa", // Blue
-  "#3b82f6", // Blue Dark
-  "#22c55e", // Green
-  "#a855f7", // Purple
-  "#d4a574", // Tan
-];
 
 export function CreateStatusModal({
   isOpen,
@@ -29,7 +19,7 @@ export function CreateStatusModal({
   onSubmit,
 }: CreateStatusModalProps) {
   const [title, setTitle] = useState("");
-  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
+  const [selectedColor, setSelectedColor] = useState<StatusColor>("#ec4899");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +29,7 @@ export function CreateStatusModal({
         color: selectedColor,
       });
       setTitle("");
-      setSelectedColor(COLORS[0]);
+      setSelectedColor("#ec4899");
     }
   };
 
@@ -77,11 +67,11 @@ export function CreateStatusModal({
               Select Color
             </label>
             <div className="flex gap-3 flex-wrap">
-              {COLORS.map((color) => (
+              {Object.values(StatusColor).map((color) => (
                 <button
                   key={color}
                   type="button"
-                  onClick={() => setSelectedColor(color)}
+                  onClick={() => setSelectedColor(color as StatusColor)}
                   className={`w-10 h-10 rounded-lg transition-transform ${
                     selectedColor === color
                       ? "ring-2 ring-offset-2 ring-gray-400 scale-110"

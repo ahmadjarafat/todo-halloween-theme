@@ -10,7 +10,12 @@ function Input({
   ...props
 }: React.ComponentProps<"input"> & { label?: string; error?: string }) {
   return (
-    <div className="flex flex-col gap-y-1.5">
+    <div
+      className={cn(
+        "flex flex-col gap-y-1.5",
+        className?.includes("w-full") && "w-full"
+      )}
+    >
       {label && (
         <label className="block text-sm font-semibold text-foreground">
           {label}

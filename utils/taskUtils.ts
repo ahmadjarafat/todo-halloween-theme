@@ -148,13 +148,5 @@ export const getDefaultTasks = (userId: string): Task[] => {
       userId,
       favorite: false,
     },
-    {
-      id: `task_${userId}_4`,
-      title: "Write documentation",
-      description: "Document the API and user interface",
-      statusId: "status_4",
-      userId,
-      favorite: false,
-    },
   ];
 };

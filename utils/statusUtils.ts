@@ -124,8 +124,8 @@ export const getUserStatuses = (userId: string): Status[] => {
 
 export const getDefaultStatuses = (userId: string): Status[] => {
   return [
-    { id: "status_1", title: "To Do", color: "#e5e7eb", userId },
-    { id: "status_2", title: "In Progress", color: "#c7d2fe", userId },
-    { id: "status_3", title: "Done", color: "#d1d5db", userId },
+    { id: "status_1", title: "To Do", color: "#ec4899", userId },
+    { id: "status_2", title: "In Progress", color: "#6366f1", userId },
+    { id: "status_3", title: "Done", color: "#22c55e", userId },
   ];
 };

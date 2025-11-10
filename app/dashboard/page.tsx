@@ -35,41 +35,6 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  useEffect(() => {
-    // Demo tasks for new users
-    if (user && tasks.length === 0 && statuses.length > 0) {
-      const demoTasksData = [
-        {
-          title: "Design landing page",
-          description: "Create a modern and responsive landing page design",
-          statusId: statuses[1]?.id || statuses[0]?.id,
-        },
-        {
-          title: "Setup authentication",
-          description: "Implement user login and registration functionality",
-          statusId: statuses[0]?.id,
-        },
-        {
-          title: "Create API endpoints",
-          description: "Build REST API for data management",
-          statusId: statuses[1]?.id || statuses[0]?.id,
-        },
-        {
-          title: "Write documentation",
-          description: "Document the API and user interface",
-          statusId: statuses[2]?.id || statuses[0]?.id,
-        },
-      ];
-
-      demoTasksData.forEach((taskData, i) => {
-        if (taskData.statusId) {
-          const newTask = addTask(user.id, { ...taskData, favorite: i === 0 });
-          setTasks((prev) => [...prev, newTask]);
-        }
-      });
-    }
-  }, [user, statuses]);
-
   const handleAddTask = (task: Omit<Task, "id" | "favorite" | "userId">) => {
     if (!user) return;
 
@@ -171,8 +136,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="max-w-full">
+    <>
+      <main>
         <TaskList
           tasks={filteredTasks}
           statuses={statuses}
@@ -217,6 +182,6 @@ export default function Dashboard() {
         onClose={() => setShowDeleteStatus(false)}
         onConfirm={confirmDeleteStatus}
       />
-    </div>
+    </>
   );
 }
