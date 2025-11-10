@@ -32,11 +32,13 @@ export default function AuthLayout({
             className={cn(
               "text-white flex flex-col bg-primary-400 h-fit py-2 px-3.5 rounded-lg",
               "items-center self-end xl:text-lg text-sm font-rubik",
-              "-mb-16 -ml-14"
+              "-mb-16 -ml-20 xl:-ml-14"
             )}
           >
-            <span>The Haunted ToDo List</span>
-            <span>Tasks That Won't Stay Buried!</span>
+            <span className="whitespace-nowrap">The Haunted ToDo List</span>
+            <span className="whitespace-nowrap">
+              Tasks That Won't Stay Buried!
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-x-2 mt-72 self-start ml-4">
